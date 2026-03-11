@@ -1,0 +1,35 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["netlify/functions/docs/**"]
+
+# Redirige /api/* vers les Netlify Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+# Protège l'accès direct aux routes privées
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200
+
+# Headers de sécurité globaux
+[[headers]]
+  for = "/*"
+    [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+
+# Empêche l'accès direct aux fonctions
+[[headers]]
+  for = "/.netlify/functions/*"
+    [headers.values]
+    Cache-Control = "no-store"

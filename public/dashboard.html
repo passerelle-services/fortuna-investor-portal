@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>FORTUNA – Investor Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+<!-- ─── SIDEBAR ─────────────────────────────────────────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/assets/logo.png" alt="FORTUNA" class="sidebar-logo" onerror="this.style.display='none';document.querySelector('.sidebar-logo-text').style.display='block'">
+    <div class="sidebar-logo-text" style="display:none">FORTUNA</div>
+    <button class="sidebar-close" onclick="toggleSidebar()" id="sidebarClose">✕</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
+      <span class="nav-icon">⊞</span> Vue d'ensemble
+    </a>
+    <a href="#" class="nav-item" data-section="business-plan" onclick="showSection('business-plan',this)">
+      <span class="nav-icon">📊</span> Business Plan
+    </a>
+    <a href="#" class="nav-item" data-section="love-money" onclick="showSection('love-money',this)">
+      <span class="nav-icon">💰</span> Tour 1 – Love Money
+    </a>
+    <a href="#" class="nav-item" data-section="qr" onclick="showSection('qr',this)">
+      <span class="nav-icon">💬</span> Q / R Investisseurs
+    </a>
+    <a href="#" class="nav-item" data-section="pitch-deck" onclick="showSection('pitch-deck',this)">
+      <span class="nav-icon">🎯</span> Pitch Deck
+    </a>
+    <a href="#" class="nav-item" data-section="legal" onclick="showSection('legal',this)">
+      <span class="nav-icon">📋</span> Documents légaux
+    </a>
+    <a href="#" class="nav-item" data-section="contact" onclick="showSection('contact',this)">
+      <span class="nav-icon">✉️</span> Contact fondateurs
+    </a>
+    <a href="#" class="nav-item" data-section="analytics" onclick="showSection('analytics',this)">
+      <span class="nav-icon">📈</span> Tracking
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user" id="sidebarUser">–</div>
+    <button class="btn-logout" onclick="logout()">Déconnexion</button>
+  </div>
+</aside>
+
+<!-- ─── TOPBAR ───────────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <button class="topbar-menu" onclick="toggleSidebar()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="topbar-title" id="topbarTitle">Vue d'ensemble</div>
+  <div class="topbar-badge">🔒 Confidentiel</div>
+</div>
+
+<!-- ─── MAIN CONTENT ──────────────────────────────────────────────────────────── -->
+<main class="main-content" id="mainContent">
+
+  <!-- OVERVIEW -->
+  <section id="sec-overview" class="section active">
+    <div class="section-header">
+      <h2>Bienvenue sur le Portail Investisseurs FORTUNA</h2>
+      <p class="section-sub">Accédez à tous les documents et informations clés du projet.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Marché adressable</div>
+        <div class="kpi-value">8 Mds €</div>
+        <div class="kpi-sub">BTP La Réunion</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">CA projeté An 1</div>
+        <div class="kpi-value">8,5 M€</div>
+        <div class="kpi-sub">Hypothèse prudente</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Levée Love Money</div>
+        <div class="kpi-value">150 K€</div>
+        <div class="kpi-sub">Sprint Mars 2026</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Autonomie financière</div>
+        <div class="kpi-value">&lt; 24 mois</div>
+        <div class="kpi-sub">Rentabilité opérationnelle</div>
+      </div>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="cards-grid">
+      <div class="portal-card" onclick="showSection('business-plan', null)">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Business Plan</div>
+        <div class="card-desc">Plan complet · Modèle économique · Projections financières</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="portal-card" onclick="showSection('love-money', null)">
+        <div class="card-icon">💰</div>
+        <div class="card-title">Tour 1 – Love Money</div>
+        <div class="card-desc">150 K€ · 3 lots · Sprint Mars 2026</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="portal-card" onclick="showSection('qr', null)">
+        <div class="card-icon">💬</div>
+        <div class="card-title">Q / R Investisseurs</div>
+        <div class="card-desc">33 questions · Réponses complètes des fondateurs</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="portal-card" onclick="showSection('pitch-deck', null)">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Pitch Deck</div>
+        <div class="card-desc">12 slides · Vision · Marché · Équipe · Financements</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="portal-card" onclick="showSection('legal', null)">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Documents légaux</div>
+        <div class="card-desc">NDA · Cap table · Term sheet</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="portal-card" onclick="showSection('contact', null)">
+        <div class="card-icon">✉️</div>
+        <div class="card-title">Contact fondateurs</div>
+        <div class="card-desc">Laurent Aubry · Thierry Fontaine</div>
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Tagline -->
+    <div class="tagline-box">
+      <blockquote>"Fortuna organise. Fortuna structure. Fortuna réalise."</blockquote>
+      <p>La plateforme numérique qui révolutionne le BTP à La Réunion.</p>
+    </div>
+  </section>
+
+  <!-- BUSINESS PLAN -->
+  <section id="sec-business-plan" class="section">
+    <div class="section-header">
+      <h2>📊 Business Plan</h2>
+      <p class="section-sub">Document complet — Levée de Fonds 2026</p>
+    </div>
+    <div class="doc-actions">
+      <button class="btn-primary" onclick="viewDoc('business-plan')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Consulter le PDF
+      </button>
+      <button class="btn-secondary" onclick="downloadDoc('business-plan', 'FORTUNA_BusinessPlan.pdf')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger
+      </button>
+    </div>
+    <div class="pdf-viewer" id="pv-business-plan" style="display:none">
+      <iframe id="iframe-business-plan" src="" class="pdf-iframe"></iframe>
+    </div>
+
+    <div class="content-grid">
+      <div class="info-block">
+        <h3>Pourquoi investir dans FORTUNA ?</h3>
+        <p>Fortuna est la première plateforme numérique qui connecte tous les acteurs du BTP réunionnais — particuliers, professionnels et collectivités — dans un guichet unique intelligent, avec un modèle économique récurrent et scalable.</p>
+        <p>Le BTP à La Réunion représente un marché de plus de <strong>8 milliards d'euros</strong>. Pourtant, il reste aujourd'hui fragmenté, opaque et inefficace.</p>
+      </div>
+      <div class="info-block">
+        <h3>Ce que vous financez</h3>
+        <ul>
+          <li>Le développement du MVP de la plateforme (application + back-office)</li>
+          <li>Les premiers recrutements commerciaux et techniques</li>
+          <li>La traction terrain sur 9 mois (pilotes collectivités + pros BTP)</li>
+          <li>La montée en puissance vers l'autonomie financière en 24 mois</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Modèle économique hybride</h3>
+    <div class="rev-grid">
+      <div class="rev-card">
+        <div class="rev-icon">💼</div>
+        <div class="rev-name">Commissions projets</div>
+        <div class="rev-amount">3,7 M€ <span>An 1</span></div>
+        <div class="rev-desc">5% / projet · 2% architectes · Alignement total avec le succès du client</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-icon">🔄</div>
+        <div class="rev-name">Abonnements pros</div>
+        <div class="rev-amount">250 K€ <span>An 1</span></div>
+        <div class="rev-desc">30€ à 199€/mois · Artisans, architectes, fournisseurs, assureurs</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-icon">🏛️</div>
+        <div class="rev-name">Licences territoriales</div>
+        <div class="rev-amount">400 K€ <span>An 1</span></div>
+        <div class="rev-desc">900€/mois · Communes, EPCI, Région · Souveraineté BTP</div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Plan financier prévisionnel</h3>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead><tr><th>Horizon</th><th>MRR estimé</th><th>CA annuel projeté</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr><td>Mois 6</td><td>5 000 €</td><td>–</td><td><span class="badge badge-blue">Premiers paiements</span></td></tr>
+          <tr><td>Mois 9</td><td>10 000 €</td><td>–</td><td><span class="badge badge-blue">MRR stable</span></td></tr>
+          <tr><td>Année 1</td><td>–</td><td>500 K – 1 M€</td><td><span class="badge badge-green">Traction prouvée</span></td></tr>
+          <tr><td>Année 2</td><td>–</td><td>3,7 – 8,5 M€</td><td><span class="badge badge-purple">Autonomie financière</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title">Allocation des 150 K€</h3>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead><tr><th>Poste</th><th>Description</th><th>Montant estimé</th></tr></thead>
+        <tbody>
+          <tr><td>Développement & Tech</td><td>MVP app, hébergement, CRM, IA</td><td>40 – 60 K€</td></tr>
+          <tr><td>RH & Commerciaux</td><td>Salaires fondateurs + 2 commerciaux</td><td>40 – 60 K€</td></tr>
+          <tr><td>Communication & Acquisition</td><td>Ads, SEO, événements, contenu</td><td>15 – 25 K€</td></tr>
+          <tr><td>Frais généraux</td><td>Comptabilité, banque, juridique, RGPD</td><td>10 – 15 K€</td></tr>
+          <tr><td>Bureau & Coworking</td><td>TechSud / Technopole (4–8 postes)</td><td>6 – 10 K€</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="subsection-title">Gestion des risques</h3>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead><tr><th>Risque</th><th>Niveau</th><th>Réponse FORTUNA</th></tr></thead>
+        <tbody>
+          <tr><td>Adoption lente des collectivités</td><td><span class="badge badge-yellow">Moyen</span></td><td>Pilotes simples, conventionnement progressif</td></tr>
+          <tr><td>Concurrence plateforme nationale</td><td><span class="badge badge-yellow">Moyen</span></td><td>Ancrage territorial fort, données BTP locales exclusives</td></tr>
+          <tr><td>Délai développement MVP</td><td><span class="badge badge-green">Faible</span></td><td>CDC finalisé, équipe technique identifiée</td></tr>
+          <tr><td>Churn des abonnés pros</td><td><span class="badge badge-green">Faible</span></td><td>Valeur réseau croissante, fidélisation par l'indispensabilité</td></tr>
+          <tr><td>Déséquilibre offre/demande</td><td><span class="badge badge-green">Faible</span></td><td>Équilibrage naturel par zones géographiques</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LOVE MONEY -->
+  <section id="sec-love-money" class="section">
+    <div class="section-header">
+      <h2>💰 Tour 1 – Love Money</h2>
+      <p class="section-sub">Sprint 3 semaines · Mars 2026 · 150 000 €</p>
+    </div>
+
+    <div class="highlight-banner">
+      <div class="highlight-stat">
+        <div class="hs-value">150 000 €</div>
+        <div class="hs-label">Objectif de levée</div>
+      </div>
+      <div class="highlight-stat">
+        <div class="hs-value">8 bons max.</div>
+        <div class="hs-label">Places disponibles</div>
+      </div>
+      <div class="highlight-stat">
+        <div class="hs-value">Mars 2026</div>
+        <div class="hs-label">Closing cible</div>
+      </div>
+      <div class="highlight-stat">
+        <div class="hs-value">SAS</div>
+        <div class="hs-label">Entrée au capital</div>
+      </div>
+    </div>
+
+    <div class="doc-actions">
+      <button class="btn-primary" onclick="viewDoc('executive-summary')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Executive Summary
+      </button>
+      <button class="btn-secondary" onclick="downloadDoc('executive-summary', 'FORTUNA_ExecutiveSummary.pdf')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger
+      </button>
+    </div>
+    <div class="pdf-viewer" id="pv-executive-summary" style="display:none">
+      <iframe id="iframe-executive-summary" src="" class="pdf-iframe"></iframe>
+    </div>
+
+    <h3 class="subsection-title">Structure des tickets</h3>
+    <div class="tickets-grid">
+      <div class="ticket-card ticket-a">
+        <div class="ticket-lot">LOT A</div>
+        <div class="ticket-price">10 000 €</div>
+        <div class="ticket-label">par bon</div>
+        <div class="ticket-qty">3 bons disponibles</div>
+        <div class="ticket-total">= 30 000 €</div>
+        <div class="ticket-profile">Investor Support</div>
+        <div class="ticket-desc">Idéal pour une première participation dans une startup early-stage.</div>
+      </div>
+      <div class="ticket-card ticket-b">
+        <div class="ticket-badge">Recommandé</div>
+        <div class="ticket-lot">LOT B</div>
+        <div class="ticket-price">20 000 €</div>
+        <div class="ticket-label">par bon</div>
+        <div class="ticket-qty">3 bons disponibles</div>
+        <div class="ticket-total">= 60 000 €</div>
+        <div class="ticket-profile">Investor + Network</div>
+        <div class="ticket-desc">Investisseur actif avec apport de réseau et d'expertise sectorielle.</div>
+      </div>
+      <div class="ticket-card ticket-c">
+        <div class="ticket-lot">LOT C</div>
+        <div class="ticket-price">30 000 €</div>
+        <div class="ticket-label">par bon</div>
+        <div class="ticket-qty">2 bons disponibles</div>
+        <div class="ticket-total">= 60 000 €</div>
+        <div class="ticket-profile">Investor Operator</div>
+        <div class="ticket-desc">Partenaire stratégique impliqué dans l'opérationnel et la gouvernance.</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Modalités :</strong> Entrée au capital · Valorisation négociée · SAS FORTUNA
+      · Ticket fractionnable (déblocage par tranches) · Accompagné par un cabinet comptable
+      · Term Sheet au closing
+    </div>
+
+    <h3 class="subsection-title">Calendrier du tour</h3>
+    <div class="timeline-h">
+      <div class="tl-step active">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Semaines 1–3 Mars</div>
+        <div class="tl-desc">Réunions investisseurs avec cabinet comptable</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Semaine 4 Mars</div>
+        <div class="tl-desc">Closing · Term Sheet · Lettres d'intention</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <div class="tl-label">T2 2026</div>
+        <div class="tl-desc">MVP opérationnel · Premiers utilisateurs</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Janv. 2027</div>
+        <div class="tl-desc">Tour 2 · 500 K€ · 20%</div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Roadmap des levées</h3>
+    <div class="funding-timeline">
+      <div class="ft-item ft-done">
+        <div class="ft-icon">💜</div>
+        <div class="ft-title">Love Money</div>
+        <div class="ft-amount">150 K€ · 16%</div>
+        <div class="ft-date">Mars 2026</div>
+        <div class="ft-status">En cours</div>
+      </div>
+      <div class="ft-arrow">→</div>
+      <div class="ft-item">
+        <div class="ft-icon">🌱</div>
+        <div class="ft-title">Seed</div>
+        <div class="ft-amount">500 K€ · 20%</div>
+        <div class="ft-date">Janv. 2027</div>
+        <div class="ft-status">Planifié</div>
+      </div>
+      <div class="ft-arrow">→</div>
+      <div class="ft-item">
+        <div class="ft-icon">🅰️</div>
+        <div class="ft-title">Série A</div>
+        <div class="ft-amount">TBD</div>
+        <div class="ft-date">2028</div>
+        <div class="ft-status">Vision</div>
+      </div>
+      <div class="ft-arrow">→</div>
+      <div class="ft-item">
+        <div class="ft-icon">🅱️</div>
+        <div class="ft-title">Série B / C</div>
+        <div class="ft-amount">TBD</div>
+        <div class="ft-date">2029+</div>
+        <div class="ft-status">Vision</div>
+      </div>
+    </div>
+
+    <div class="why-now-box">
+      <h3>Pourquoi maintenant ?</h3>
+      <p>Le marché est prêt. L'équipe est prête. La tech est spécifiée. Les premiers partenaires institutionnels sont identifiés. Chaque semaine de retard est une semaine où un concurrent potentiel peut occuper l'espace. Fortuna a besoin de ses premiers alliés financiers pour transformer une vision en réalité mesurable.</p>
+    </div>
+  </section>
+
+  <!-- Q / R -->
+  <section id="sec-qr" class="section">
+    <div class="section-header">
+      <h2>💬 Questions / Réponses Investisseurs</h2>
+      <p class="section-sub">33 questions · Réponses complètes des fondateurs</p>
+    </div>
+    <div class="doc-actions">
+      <button class="btn-primary" onclick="viewDoc('qr-investisseurs')">Consulter le PDF complet</button>
+      <button class="btn-secondary" onclick="downloadDoc('qr-investisseurs', 'FORTUNA_QR_Investisseurs.pdf')">Télécharger</button>
+    </div>
+    <div class="pdf-viewer" id="pv-qr-investisseurs" style="display:none">
+      <iframe id="iframe-qr-investisseurs" src="" class="pdf-iframe"></iframe>
+    </div>
+
+    <div class="faq-categories">
+      <button class="faq-cat active" onclick="filterFAQ('all',this)">Toutes</button>
+      <button class="faq-cat" onclick="filterFAQ('vision',this)">Vision</button>
+      <button class="faq-cat" onclick="filterFAQ('produit',this)">Produit</button>
+      <button class="faq-cat" onclick="filterFAQ('marche',this)">Marché</button>
+      <button class="faq-cat" onclick="filterFAQ('finance',this)">Finances</button>
+      <button class="faq-cat" onclick="filterFAQ('risques',this)">Risques</button>
+      <button class="faq-cat" onclick="filterFAQ('exit',this)">Exit</button>
+    </div>
+
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item" data-cat="vision">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q1 – Résumez Fortuna en 10 secondes.</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Fortuna, c'est le guichet unique du parcours travaux/construction : on transforme une demande d'un particulier en un projet structuré, on le matche avec un réseau de pros qualifiés, et on sécurise le suivi (devis, étapes, financement, preuves). Les pros payent un abonnement pour accéder à des demandes qualifiées, et à terme les collectivités pour un backoffice.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="vision">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q2 – Quel problème vous réglez exactement ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Aujourd'hui, un particulier perd du temps et de l'argent à cause de 4 gros points : 1) difficulté à trouver les bons artisans fiables ; 2) manque de visibilité sur les prix/délais ; 3) parcours administratif lourd (permis, urbanisme…) ; 4) filière déchets BTP peu structurée. Fortuna simplifie, sécurise et accélère tout le processus via une IA qui pose les bonnes questions, vérifie la cohérence et pré-remplit le dossier.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="vision">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q3 – Pourquoi maintenant ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Parce que le marché est mûr : digitalisation des démarches, hausse de la demande sur rénovation/construction, besoin de transparence du territoire, pression réglementaire et environnementale sur les déchets.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="produit">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q4 – C'est quoi le produit, précisément ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Une application + backoffice qui permet : dépôt de projet (terrain, travaux, rénovation), matching avec pros qualifiés, devis/planification/suivi, espace collectivité/urbanisme (dossier pré-formaté), module filière déchets (traçabilité, collecte, revalorisation), notation & fiabilité (anti-arnaque).
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="produit">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q5 – Quel est votre avantage concurrentiel clé ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          On ne fait pas "juste un annuaire". Fortuna pilote tout le parcours avec un système de qualification, de suivi et de preuve (dossier, étapes, traçabilité). La vraie barrière à l'entrée : la base de pros qualifiés, l'intégration collectivités, la filière déchets et l'effet réseau local.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="finance">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q6 – Vous gagnez comment de l'argent ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          4 sources solides : 1) Abonnements pros (artisans 50€/mois, agences 150€/mois) ; 2) Collectivités (backoffice 900€/mois) ; 3) Services premium / options (leads qualifiés, reporting, API) ; 4) Commission sur performance dossier (4% à chaque étape validée et contractualisée).
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="marche">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q7 – C'est quoi votre marché ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          BTP + immobilier + rénovation + services administratifs + filière déchets. Marché structurel (pas une mode). Neuf : +8 000 dossiers/an, objectif 4% de captation. Réhabilitation : +165 000 habitations. Total marché adressable : 8+ milliards €.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="marche">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q8 – Vous visez qui en premier ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          On démarre par là où il y a le plus de friction et de valeur immédiate : particuliers perdus cherchant une solution cadrée, artisans & entreprises BTP (abonnement), agences immobilières (annonces + leads), fournisseurs/magasins (trafic). Puis on branche banques/assurances/collectivités.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="marche">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q9 – Pourquoi La Réunion est un bon point de départ ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Territoire parfait pour tester : marché concentré, acteurs déjà identifiables, besoins réels (construction/rénovation/urbanisme), vitesse d'exécution + proximité terrain. Et après : duplication DOM puis métropole.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="marche">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q10 – Qui fait déjà ça ? (Concurrence)</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Il existe des morceaux séparés : plateformes de mise en relation (leads), annuaires/avis/forums, logiciels de chantier. Mais personne ne combine dans un parcours unique : demande particulier + réseau pro + collectivité/urbanisme + déchets BTP.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="marche">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q11 – Pourquoi vous allez gagner ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Stratégie "terrain + système" : démarrage local avec réseau réel, modèle abonnement récurrent, effet réseau (plus de pros → plus de demandes → plus de valeur), intégration collectivités + déchets = barrière à l'entrée.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="finance">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q17 – Pourquoi abonnement plutôt que commission seule ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          L'abonnement donne : revenus récurrents, prévisibilité, valeur ajoutée continue (outil + visibilité + leads + suivi). La commission paie la performance : uniquement quand Fortuna transforme une demande en chiffre d'affaires. Déclencheur traçable : devis signé + acompte ou première facture payée.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="finance">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q22 – Pourquoi vous levez des fonds ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Pour financer : développement MVP, acquisition (marketing + force terrain), structuration juridique/conformité, premiers recrutements clés.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="finance">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q25 – Combien vous cherchez et à quelle valorisation ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Tour 1 : 150 K€ (love money contre 16%) avant fin mars 2026, pour tenir 12 mois de runway (MVP + lancement + traction commerciale prouvée). Tour 2 : 500 K€ contre 20% dès janvier 2027. Valorisation basée sur la taille du marché (1,76 Md€ neuf + 113 M€ réhabilitation), potentiel SaaS récurrent et effet réseau.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="finance">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q27 – Vous êtes prêts à céder combien ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          On veut lever en restant majoritaires et garder le pilotage produit & vision. Objectif : partenaire financier + réseau, pas juste un chèque. Tour 1 : 16% contre 100–150K. Tour 2 : 20% contre 500K.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="risques">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q28 – Quels sont les risques principaux ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          1) Adoption pro (il faut une vraie valeur) ; 2) Acquisition particuliers (il faut des volumes) ; 3) Modération/litiges (il faut un cadre clair) ; 4) Exécution (priorisation MVP). Chaque risque identifié a sa contre-mesure intégrée.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="risques">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q29 – Si un artisan fait n'importe quoi ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Fortuna impose un cadre : CGU + règles, système d'avis et preuves, suspension/déréférencement, médiation possible. On protège l'écosystème.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="exit">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q30 – Comment je récupère mon argent ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          3 scénarios : 1) Croissance rentable → dividendes / rachat de parts ; 2) Rachat par groupe (BTP, assurance, banque, logiciel) ; 3) Expansion nationale → levées successives → sortie plus grosse.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="risques">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q31 – Pourquoi vous êtes légitimes ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Entrepreneurs terrain. Nous connaissons les réalités opérationnelles, la vente, les partenaires, les problèmes concrets. Laurent Aubry a conçu une app MER particuliers/artisans intégrée chez les assureurs (cellule sinistre). Thierry Fontaine était DCOI chez Oracle puis IBM, depuis 8 ans à La Réunion.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="risques">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q32 – Si je copie votre idée ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          Vous pouvez copier l'idée. Mais vous ne copierez pas : le réseau terrain, la dynamique locale, la donnée de fiabilité, la relation collectivités, le système déchets. C'est le vrai moat : densité locale + confiance + intégrations.
+        </div>
+      </div>
+
+      <div class="faq-item" data-cat="vision">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          <span>Q33 – Plan 90 jours ?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">
+          MVP fonctionnel, 50–100 pros onboardés "fondateurs", premiers utilisateurs particuliers, preuve de conversion & rétention, go/no-go pour accélération marketing.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PITCH DECK -->
+  <section id="sec-pitch-deck" class="section">
+    <div class="section-header">
+      <h2>🎯 Pitch Deck</h2>
+      <p class="section-sub">12 slides · Levée de Fonds 2026</p>
+    </div>
+    <div class="doc-actions">
+      <button class="btn-primary" onclick="viewDoc('pitch-deck')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Ouvrir le Pitch Deck
+      </button>
+      <button class="btn-secondary" onclick="downloadDoc('pitch-deck', 'FORTUNA_PitchDeck.pdf')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Télécharger
+      </button>
+    </div>
+
+    <div class="pitch-viewer-wrapper">
+      <div class="pdf-viewer active" id="pv-pitch-deck">
+        <iframe id="iframe-pitch-deck" src="" class="pdf-iframe pitch-full"></iframe>
+      </div>
+    </div>
+
+    <div class="slides-summary">
+      <h3 class="subsection-title">Résumé des slides</h3>
+      <div class="slides-grid">
+        <div class="slide-card"><span class="slide-num">01</span><div class="slide-title">Couverture</div><div class="slide-desc">La plateforme numérique du BTP réunionnais</div></div>
+        <div class="slide-card"><span class="slide-num">02</span><div class="slide-title">L'Opportunité</div><div class="slide-desc">896 000 habitants · 8 200 constructions neuves/an · 165 000 habitations à rénover</div></div>
+        <div class="slide-card"><span class="slide-num">03</span><div class="slide-title">Le Problème</div><div class="slide-desc">Des milliers de projets abandonnés faute d'orientation</div></div>
+        <div class="slide-card"><span class="slide-num">04</span><div class="slide-title">La Solution</div><div class="slide-desc">Guichet unique numérique de l'idée au permis de construire</div></div>
+        <div class="slide-card"><span class="slide-num">05</span><div class="slide-title">Modèle économique</div><div class="slide-desc">3 sources hybrides · Commissions + Abonnements + Licences</div></div>
+        <div class="slide-card"><span class="slide-num">06</span><div class="slide-title">Marché & Roadmap</div><div class="slide-desc">3 segments · 3 phases · 12 mois vers la traction prouvée</div></div>
+        <div class="slide-card"><span class="slide-num">07</span><div class="slide-title">L'Équipe</div><div class="slide-desc">Thierry Fontaine + Laurent Aubry · 60 ans d'expérience combinée</div></div>
+        <div class="slide-card"><span class="slide-num">08</span><div class="slide-title">Stade d'avancement</div><div class="slide-desc">Site web, CDC technique, architecture digitale — déjà prêts</div></div>
+        <div class="slide-card"><span class="slide-num">09</span><div class="slide-title">Plan financier</div><div class="slide-desc">150 K€ pour lancer · Autonomie en 24 mois</div></div>
+        <div class="slide-card"><span class="slide-num">10</span><div class="slide-title">La Levée</div><div class="slide-desc">3 lots · 8 bons max · Entrée au capital</div></div>
+        <div class="slide-card"><span class="slide-num">11</span><div class="slide-title">Gestion des risques</div><div class="slide-desc">Chaque risque identifié a sa contre-mesure intégrée</div></div>
+        <div class="slide-card"><span class="slide-num">12</span><div class="slide-title">Rejoignez l'aventure</div><div class="slide-desc">Partenaires fondateurs de l'histoire de La Réunion</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL -->
+  <section id="sec-legal" class="section">
+    <div class="section-header">
+      <h2>📋 Documents légaux</h2>
+      <p class="section-sub">Documents confidentiels · Accès sécurisé</p>
+    </div>
+    <div class="legal-grid">
+      <div class="legal-card">
+        <div class="legal-icon">🤝</div>
+        <div class="legal-info">
+          <div class="legal-title">Accord de Confidentialité (NDA)</div>
+          <div class="legal-desc">Non-Disclosure Agreement · Document standard · Signé avant tout partage d'information sensible</div>
+          <div class="legal-status"><span class="badge badge-yellow">Sur demande</span></div>
+        </div>
+        <div class="legal-actions">
+          <button class="btn-secondary" onclick="requestDoc('NDA')">Demander</button>
+        </div>
+      </div>
+
+      <div class="legal-card">
+        <div class="legal-icon">📊</div>
+        <div class="legal-info">
+          <div class="legal-title">Cap Table simplifiée</div>
+          <div class="legal-desc">Structure du capital actuelle · Répartition des parts · Projections post-levée</div>
+          <div class="legal-status"><span class="badge badge-yellow">Sur demande</span></div>
+        </div>
+        <div class="legal-actions">
+          <button class="btn-secondary" onclick="requestDoc('Cap Table')">Demander</button>
+        </div>
+      </div>
+
+      <div class="legal-card">
+        <div class="legal-icon">📝</div>
+        <div class="legal-info">
+          <div class="legal-title">Term Sheet</div>
+          <div class="legal-desc">Conditions d'investissement · Droits des investisseurs · Liquidation preference · Anti-dilution</div>
+          <div class="legal-status"><span class="badge badge-blue">Au closing</span></div>
+        </div>
+        <div class="legal-actions">
+          <button class="btn-secondary" onclick="requestDoc('Term Sheet')">Demander</button>
+        </div>
+      </div>
+
+      <div class="legal-card">
+        <div class="legal-icon">🏢</div>
+        <div class="legal-info">
+          <div class="legal-title">Statuts SAS FORTUNA</div>
+          <div class="legal-desc">Gouvernance · Laurent Aubry (Président) · Thierry Fontaine (DG) · Rotation tous les 5 ans</div>
+          <div class="legal-status"><span class="badge badge-yellow">Sur demande</span></div>
+        </div>
+        <div class="legal-actions">
+          <button class="btn-secondary" onclick="requestDoc('Statuts SAS')">Demander</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="docRequestMsg" class="info-box" style="display:none; margin-top:1.5rem;">
+      ✉️ Votre demande a été enregistrée. Les fondateurs vous contacteront dans les 24h à <strong>laurent@fortuna.re</strong>
+    </div>
+
+    <div class="legal-note">
+      <strong>Note :</strong> Tous les documents légaux sont partagés sous NDA. Le cabinet comptable accompagne le closing et vérifie la conformité des Term Sheets. Reporting trimestriel garanti aux investisseurs.
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="sec-contact" class="section">
+    <div class="section-header">
+      <h2>✉️ Contact Fondateurs</h2>
+      <p class="section-sub">Nous cherchons des partenaires convaincus, pas des financeurs passifs.</p>
+    </div>
+
+    <div class="founders-grid">
+      <div class="founder-card">
+        <div class="founder-avatar">LA</div>
+        <div class="founder-info">
+          <div class="founder-name">Laurent Aubry</div>
+          <div class="founder-role">Directeur Associé · R&D & Stratégie Territoriale</div>
+          <div class="founder-bg">
+            <ul>
+              <li>Entrepreneur depuis 1989 · Communication & Marketing</li>
+              <li>Direction hôtelière 3* (2006–2011)</li>
+              <li>Fondateur PASSERELLE SERVICES (app BTP)</li>
+              <li>230 artisans gérés · Groupe Hayot, Allianz</li>
+            </ul>
+          </div>
+          <div class="founder-contacts">
+            <a href="mailto:laurent@fortuna.re" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              laurent@fortuna.re
+            </a>
+            <a href="tel:+262692649000" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.18 19.79 19.79 0 01.05 3.6 2 2 0 012 1.61h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9a16 16 0 006 6l.27-.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0120 17l.92-.08z"/></svg>
+              +262 692 64 9000
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder-card">
+        <div class="founder-avatar">TF</div>
+        <div class="founder-info">
+          <div class="founder-name">Thierry Fontaine</div>
+          <div class="founder-role">Directeur Associé · Opérations & Business Dev.</div>
+          <div class="founder-bg">
+            <ul>
+              <li>Grande École de Commerce Paris + MBA Ottawa</li>
+              <li>IBM · Ingénieur commercial, Directeur Madagascar</li>
+              <li>Ets ISAUTIER · Directeur Commercial puis DG</li>
+              <li>Oracle Corp. · 17 pays OI & Afrique sub-saharienne</li>
+              <li>Huawei OI · Grands Systèmes & Smart Cities</li>
+            </ul>
+          </div>
+          <div class="founder-contacts">
+            <a href="mailto:thierry@fortuna.re" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              thierry@fortuna.re
+            </a>
+            <a href="tel:+262692570252" class="contact-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.18 19.79 19.79 0 01.05 3.6 2 2 0 012 1.61h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9a16 16 0 006 6l.27-.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0120 17l.92-.08z"/></svg>
+              +262 692 570 252
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-section">
+      <h3>Envoyer un message aux fondateurs</h3>
+      <form id="contactForm" class="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Votre nom</label>
+            <input type="text" id="cName" placeholder="Prénom Nom" required>
+          </div>
+          <div class="form-group">
+            <label>Votre email</label>
+            <input type="email" id="cEmail" placeholder="votre@email.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Sujet</label>
+          <select id="cSubject">
+            <option>Intérêt pour investir – LOT A (10 K€)</option>
+            <option>Intérêt pour investir – LOT B (20 K€)</option>
+            <option>Intérêt pour investir – LOT C (30 K€)</option>
+            <option>Demande d'information complémentaire</option>
+            <option>Demande de rendez-vous</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="cMsg" rows="4" placeholder="Votre message…"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Envoyer le message</button>
+      </form>
+      <div id="contactSuccess" class="success-msg" style="display:none">
+        ✅ Message envoyé ! Les fondateurs vous répondront dans les 24 heures.
+      </div>
+    </div>
+
+    <div class="website-link">
+      <a href="https://www.fortuna.re" target="_blank" class="btn-outline">
+        🌐 Visiter www.fortuna.re
+      </a>
+    </div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section id="sec-analytics" class="section">
+    <div class="section-header">
+      <h2>📈 Tracking Investisseurs</h2>
+      <p class="section-sub">Activité du portail · Mis à jour en temps réel</p>
+    </div>
+    <div id="analyticsContent">
+      <div class="loading-spinner">Chargement des données…</div>
+    </div>
+  </section>
+
+</main>
+
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

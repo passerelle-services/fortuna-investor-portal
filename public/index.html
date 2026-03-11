@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>FORTUNA – Investor Access</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+
+  <div class="login-bg">
+    <div class="login-bg-grid"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="login-logo">
+        <img src="/assets/logo.png" alt="FORTUNA" onerror="this.style.display='none'; document.querySelector('.login-logo-text').style.display='block'">
+        <div class="login-logo-text" style="display:none">FORTUNA</div>
+      </div>
+
+      <div class="login-header">
+        <h1>FORTUNA</h1>
+        <p class="login-subtitle">PORTAIL PRIVÉ D'INVESTISSEURS</p>
+        <div class="login-badge">Accès restreint · Confidentiel</div>
+      </div>
+
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="email">Email (optionnel)</label>
+          <input type="email" id="email" name="email" placeholder="votre@email.com" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input type="password" id="password" name="password" placeholder="••••••••••••" required autocomplete="current-password">
+            <button type="button" class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="login-error" style="display:none"></div>
+
+        <button type="submit" class="btn-primary btn-full" id="loginBtn">
+          <span id="btnText">Accéder aux infos et documents</span>
+          <span id="btnLoader" class="btn-loader" style="display:none">
+            <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          </span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Document confidentiel réservé aux investisseurs autorisés.</p>
+        <p>© 2026 FORTUNA · <a href="mailto:laurent@fortuna.re">Contact</a></p>
+      </div>
+    </div>
+
+    <div class="login-tagline">
+      <p>"Fortuna organise. Fortuna structure. Fortuna réalise."</p>
+      <span>La plateforme numérique du BTP réunionnais</span>
+    </div>
+  </div>
+
+  <script>
+    function togglePw() {
+      const i = document.getElementById('password');
+      i.type = i.type === 'password' ? 'text' : 'password';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errEl = document.getElementById('loginError');
+      const btnText = document.getElementById('btnText');
+      const btnLoader = document.getElementById('btnLoader');
+      const btn = document.getElementById('loginBtn');
+
+      errEl.style.display = 'none';
+      btnText.style.display = 'none';
+      btnLoader.style.display = 'flex';
+      btn.disabled = true;
+
+      try {
+        sessionStorage.removeItem('fortuna_token');
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (data.token) sessionStorage.setItem('fortuna_token', data.token);
+          window.location.href = '/dashboard';
+        } else {
+          errEl.textContent = data.error || 'Identifiants incorrects.';
+          errEl.style.display = 'block';
+        }
+      } catch {
+        errEl.textContent = 'Erreur de connexion. Réessayez.';
+        errEl.style.display = 'block';
+      } finally {
+        btnText.style.display = 'inline';
+        btnLoader.style.display = 'none';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
