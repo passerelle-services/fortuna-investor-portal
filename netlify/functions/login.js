@@ -24,7 +24,11 @@ function corsHeaders() {
 
 async function saveLoginEvent(userName, userEmail) {
   try {
-    const store = getStore('fortuna-analytics');
+    const store = getStore({
+      name: 'fortuna-analytics',
+      siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_API_TOKEN,
+    });
     const key = `login-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
     await store.set(key, JSON.stringify({
       type: 'login',

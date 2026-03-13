@@ -1,5 +1,4 @@
 // ─── FORTUNA · Netlify Function : /api/analytics ──────────────────────────────
-// Persistance via Netlify Blobs (gratuit, intégré)
 const jwt = require('jsonwebtoken');
 const { getStore } = require('@netlify/blobs');
 
@@ -22,6 +21,14 @@ function verifyToken(event) {
   catch { return null; }
 }
 
+function getBlobStore() {
+  return getStore({
+    name: 'fortuna-analytics',
+    siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID,
+    token: process.env.NETLIFY_API_TOKEN,
+  });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders(), body: '' };
 
@@ -29,7 +36,7 @@ exports.handler = async (event) => {
   if (!decoded) return { statusCode: 401, headers: corsHeaders(), body: JSON.stringify({ error: 'Non autorisé' }) };
 
   try {
-    const store = getStore('fortuna-analytics');
+    const store = getBlobStore();
 
     // Récupérer tous les événements login
     const loginList = await store.list({ prefix: 'login-' });
@@ -45,18 +52,17 @@ exports.handler = async (event) => {
     );
     const validDocs = docs.filter(Boolean);
 
-    // Calcul des stats par utilisateur
+    // Stats par utilisateur
     const userMap = {};
     validLogins.forEach(l => {
       const key = l.user || l.email || 'Inconnu';
       if (!userMap[key]) userMap[key] = { logins: [], lastLogin: null };
       userMap[key].logins.push(l.at);
-      if (!userMap[key].lastLogin || new Date(l.at) > new Date(userMap[key].lastLogin)) {
+      if (!userMap[key].lastLogin || new Date(l.at) > new Date(userMap[key].lastLogin))
         userMap[key].lastLogin = l.at;
-      }
     });
 
-    // Calcul des stats par doc
+    // Stats par doc
     const docCounts = {};
     validDocs.forEach(d => {
       if (d.docId) docCounts[d.docId] = (docCounts[d.docId] || 0) + 1;
@@ -74,7 +80,6 @@ exports.handler = async (event) => {
       }),
     };
   } catch (err) {
-    console.error('[analytics] Erreur Blobs:', err.message);
     return {
       statusCode: 200,
       headers: corsHeaders(),
@@ -85,7 +90,6 @@ exports.handler = async (event) => {
         recentLogins: [],
         userMap: {},
         blobsError: err.message,
-        blobsStack: err.stack ? err.stack.split('\n')[0] : '',
       }),
     };
   }

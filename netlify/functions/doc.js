@@ -34,7 +34,11 @@ function verifyToken(event) {
 
 async function saveDocEvent(docId, userName) {
   try {
-    const store = getStore('fortuna-analytics');
+    const store = getStore({
+      name: 'fortuna-analytics',
+      siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_API_TOKEN,
+    });
     const key = `doc-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
     await store.set(key, JSON.stringify({
       type: 'doc',
