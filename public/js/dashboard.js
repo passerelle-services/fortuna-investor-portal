@@ -278,3 +278,105 @@ async function loadAnalytics() {
     container.innerHTML = '<div class="loading-spinner">Erreur de chargement.</div>';
   }
 }
+
+// ─── MODAL INVESTISSEMENT ─────────────────────────────────────────────────────
+let selectedLot = null;
+
+function openInvestModal() {
+  selectedLot = null;
+  goModalStep1();
+  document.getElementById('investModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInvestModal() {
+  document.getElementById('investModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('investModal')) closeInvestModal();
+}
+
+function selectModalLot(lot, montant, profil) {
+  selectedLot = { lot, montant, profil };
+  document.querySelectorAll('.modal-lot').forEach(el => el.classList.remove('selected'));
+  document.getElementById('mlot-' + lot).classList.add('selected');
+  const btn = document.getElementById('btnStep1Next');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+
+function goModalStep1() {
+  document.getElementById('modalStep1').style.display = 'block';
+  document.getElementById('modalStep2').style.display = 'none';
+  document.getElementById('modalStep3').style.display = 'none';
+}
+
+function goModalStep2() {
+  if (!selectedLot) return;
+  document.getElementById('modalStep1').style.display = 'none';
+  document.getElementById('modalStep2').style.display = 'block';
+  document.getElementById('modalStep3').style.display = 'none';
+
+  document.getElementById('iLot').value     = 'LOT ' + selectedLot.lot;
+  document.getElementById('iMontant').value = selectedLot.montant;
+  document.getElementById('iProfil').value  = selectedLot.profil;
+
+  document.getElementById('lotRecap').innerHTML = `
+    <span class="mlr-lot">✅ LOT ${selectedLot.lot} sélectionné</span>
+    <span class="mlr-price">${selectedLot.montant}</span>
+    <span class="mlr-profile">${selectedLot.profil}</span>
+  `;
+}
+
+async function submitInvestForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSubmitInvest');
+  btn.textContent = '⏳ Envoi en cours…';
+  btn.disabled = true;
+
+  const prenom = document.getElementById('iPrenom').value.trim();
+  const nom    = document.getElementById('iNom').value.trim();
+  const email  = document.getElementById('iEmail').value.trim();
+  const tel    = document.getElementById('iTel').value.trim();
+  const msg    = document.getElementById('iMsg').value.trim();
+
+  // Envoi Netlify Forms
+  try {
+    await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'form-name': 'reservation-investissement',
+        prenom, nom, email, telephone: tel,
+        lot: 'LOT ' + selectedLot.lot,
+        montant: selectedLot.montant,
+        profil: selectedLot.profil,
+        message: msg,
+      }).toString(),
+    });
+  } catch {
+    // Fallback mailto si hors Netlify
+    const subj = encodeURIComponent(`[FORTUNA] Réservation LOT ${selectedLot.lot} – ${prenom} ${nom}`);
+    const body = encodeURIComponent(
+      `Réservation investissement FORTUNA\n\n` +
+      `LOT ${selectedLot.lot} – ${selectedLot.montant} (${selectedLot.profil})\n\n` +
+      `Prénom : ${prenom}\nNom : ${nom}\nEmail : ${email}\nTél : ${tel}\nMessage : ${msg || '–'}\n\nClosing : 5 avril 2026`
+    );
+    window.open(`mailto:laurent@fortuna.re,thierry@fortuna.re?subject=${subj}&body=${body}`, '_blank');
+  }
+
+  document.getElementById('successDetails').innerHTML =
+    `LOT ${selectedLot.lot} — ${selectedLot.montant} (${selectedLot.profil})<br>` +
+    `👤 ${prenom} ${nom} · 📧 ${email} · 📞 ${tel}`;
+
+  document.getElementById('modalStep2').style.display = 'none';
+  document.getElementById('modalStep3').style.display = 'block';
+  btn.textContent = '✅ Confirmer ma réservation';
+  btn.disabled = false;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeInvestModal();
+});
