@@ -336,11 +336,14 @@ async function submitInvestForm(e) {
   btn.textContent = '⏳ Envoi en cours…';
   btn.disabled = true;
 
-  const prenom = document.getElementById('iPrenom').value.trim();
-  const nom    = document.getElementById('iNom').value.trim();
-  const email  = document.getElementById('iEmail').value.trim();
-  const tel    = document.getElementById('iTel').value.trim();
-  const msg    = document.getElementById('iMsg').value.trim();
+  const prenom   = document.getElementById('iPrenom').value.trim();
+  const nom      = document.getElementById('iNom').value.trim();
+  const email    = document.getElementById('iEmail').value.trim();
+  const tel      = document.getElementById('iTel').value.trim();
+  const msg      = document.getElementById('iMsg').value.trim();
+  const payEl    = document.querySelector('input[name="paiement"]:checked');
+  const paiement = payEl ? payEl.value : 'Non précisé';
+  document.getElementById('iPaiement').value = paiement;
 
   const payload = {
     lot:       selectedLot.lot,
@@ -348,6 +351,7 @@ async function submitInvestForm(e) {
     profil:    selectedLot.profil,
     prenom, nom, email,
     telephone: tel,
+    paiement,
     message:   msg,
   };
 

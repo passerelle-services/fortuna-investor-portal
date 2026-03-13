@@ -501,9 +501,21 @@
           <div class="payment-info-box">
             <div class="pib-title">💳 Modalités de paiement</div>
             <div class="pib-options">
-              <div class="pib-opt">✅ Paiement en <strong>1 fois</strong></div>
-              <div class="pib-opt">✅ Paiement en <strong>2 fois</strong></div>
-              <div class="pib-opt">✅ Paiement en <strong>3 fois</strong></div>
+              <label class="pib-opt pib-radio">
+                <input type="radio" name="paiement" value="1 fois" id="pay1">
+                <span class="pib-radio-box"></span>
+                Paiement en <strong>1 fois</strong>
+              </label>
+              <label class="pib-opt pib-radio">
+                <input type="radio" name="paiement" value="2 fois" id="pay2">
+                <span class="pib-radio-box"></span>
+                Paiement en <strong>2 fois</strong>
+              </label>
+              <label class="pib-opt pib-radio">
+                <input type="radio" name="paiement" value="3 fois" id="pay3">
+                <span class="pib-radio-box"></span>
+                Paiement en <strong>3 fois</strong>
+              </label>
             </div>
             <div class="pib-note">Aucun paiement aujourd'hui · Les modalités seront définies avec un fondateur</div>
           </div>
@@ -515,6 +527,7 @@
           <input type="hidden" name="lot" id="iLot">
           <input type="hidden" name="montant" id="iMontant">
           <input type="hidden" name="profil" id="iProfil">
+          <input type="hidden" name="paiement" id="iPaiement">
           <input type="hidden" name="form-name" value="reservation-investissement">
           <p class="bot-field" style="display:none"><input name="bot-field"></p>
 

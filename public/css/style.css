@@ -606,6 +606,27 @@ a { color: inherit; text-decoration: none; }
 .pib-title { font-weight: 600; font-size: .9rem; color: #15803d; margin-bottom: .6rem; }
 .pib-options { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: .5rem; }
 .pib-opt { font-size: .82rem; color: #166534; }
+.pib-radio {
+  display: flex; align-items: center; gap: .5rem;
+  cursor: pointer; padding: .45rem .75rem;
+  border-radius: 6px; border: 1.5px solid #86efac;
+  background: #fff; transition: all .15s;
+  user-select: none;
+}
+.pib-radio:hover { border-color: #22c55e; background: #f0fdf4; }
+.pib-radio input[type="radio"] { display: none; }
+.pib-radio-box {
+  width: 16px; height: 16px; min-width: 16px;
+  border-radius: 50%; border: 2px solid #86efac;
+  background: #fff; transition: all .15s;
+  display: inline-block;
+}
+.pib-radio input[type="radio"]:checked ~ .pib-radio-box {
+  background: #16a34a; border-color: #16a34a;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+.pib-radio input[type="radio"]:checked + .pib-radio-box + strong,
+.pib-radio:has(input:checked) { border-color: #16a34a; background: #dcfce7; font-weight: 600; }
 .pib-note { font-size: .75rem; color: #4d7c0f; font-style: italic; }
 
 /* Rappel closing */

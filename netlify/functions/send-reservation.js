@@ -18,7 +18,7 @@ function getUser(event) {
 }
 
 // ── HTML email – fondateurs ─────────────────────────────────────────────────
-function buildFounderEmail({ lot, montant, profil, prenom, nom, email, telephone, message }) {
+function buildFounderEmail({ lot, montant, profil, prenom, nom, email, telephone, paiement, message }) {
   return `
 <!DOCTYPE html>
 <html lang="fr">
@@ -52,6 +52,7 @@ function buildFounderEmail({ lot, montant, profil, prenom, nom, email, telephone
                 <span style="color:#d4a843;font-size:22px;font-weight:700">${montant}</span>
               </div>
               <div style="color:#94a3b8;font-size:14px;margin-top:8px">${profil}</div>
+              ${paiement && paiement !== 'Non précisé' ? `<div style="margin-top:10px;display:inline-block;background:#d4a843;color:#0f172a;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px">💳 Paiement en ${paiement}</div>` : ''}
             </td></tr>
           </table>
         </td></tr>
@@ -204,7 +205,7 @@ exports.handler = async (event) => {
   try { body = JSON.parse(event.body); }
   catch { return { statusCode: 400, body: JSON.stringify({ error: 'Corps invalide' }) }; }
 
-  const { lot, montant, profil, prenom, nom, email, telephone, message } = body;
+  const { lot, montant, profil, prenom, nom, email, telephone, paiement, message } = body;
 
   if (!lot || !montant || !prenom || !nom || !email) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Champs obligatoires manquants' }) };
@@ -236,7 +237,7 @@ exports.handler = async (event) => {
       from: `"FORTUNA Investor Portal" <${GMAIL_USER}>`,
       to: 'laurent@fortuna.re, thierry@fortuna.re',
       subject,
-      html: buildFounderEmail({ lot, montant, profil, prenom, nom, email, telephone, message }),
+      html: buildFounderEmail({ lot, montant, profil, prenom, nom, email, telephone, paiement, message }),
     });
 
     // Email de confirmation à l'investisseur
