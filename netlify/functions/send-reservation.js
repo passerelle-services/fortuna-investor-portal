@@ -123,7 +123,7 @@ function buildInvestorEmail({ lot, montant, profil, prenom, nom }) {
         <tr><td style="padding:36px 40px 0">
           <div style="font-size:22px;font-weight:700;color:#0f172a">Bonjour ${prenom},</div>
           <div style="margin-top:12px;font-size:16px;color:#475569;line-height:1.7">
-            Nous avons bien reçu votre demande de réservation. Votre intérêt pour FORTUNA nous touche et nous en sommes sincèrement reconnaissants.
+            Nous avons bien reçu votre demande de réservation. Votre intérêt pour FORTUNA nous touche et nous vous félicitons de votre excellente décision.
           </div>
         </td></tr>
 
@@ -166,10 +166,10 @@ function buildInvestorEmail({ lot, montant, profil, prenom, nom }) {
           <div style="background:#f8fafc;border-radius:8px;padding:20px;border:1px solid #e2e8f0">
             <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:12px">📞 Vos contacts FORTUNA</div>
             <div style="font-size:14px;color:#475569;margin-bottom:6px">
-              <strong>Laurent Aubry</strong> — <a href="tel:+262692XXXXXX" style="color:#1e3a5f">+262 692 XX XX XX</a> · <a href="mailto:laurent@fortuna.re" style="color:#1e3a5f">laurent@fortuna.re</a>
+              <strong>Laurent Aubry</strong> — <a href="tel:+262692649000" style="color:#1e3a5f">+262 692 64 9000</a> · <a href="mailto:laurent@fortuna.re" style="color:#1e3a5f">laurent@fortuna.re</a>
             </div>
             <div style="font-size:14px;color:#475569">
-              <strong>Thierry Fontaine</strong> — <a href="tel:+262692XXXXXX" style="color:#1e3a5f">+262 692 XX XX XX</a> · <a href="mailto:thierry@fortuna.re" style="color:#1e3a5f">thierry@fortuna.re</a>
+              <strong>Thierry Fontaine</strong> — <a href="tel:+262692570252" style="color:#1e3a5f">+262 692 570 252</a> · <a href="mailto:thierry@fortuna.re" style="color:#1e3a5f">thierry@fortuna.re</a>
             </div>
           </div>
         </td></tr>
