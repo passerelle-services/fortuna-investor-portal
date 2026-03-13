@@ -36,7 +36,7 @@ async function saveDocEvent(docId, userName) {
   try {
     const store = getStore({
       name: 'fortuna-analytics',
-      siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID,
+      siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID || '1c1bfd7c-e6ef-4349-a4b1-12da522087fa',
       token: process.env.NETLIFY_API_TOKEN,
     });
     const key = `doc-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
