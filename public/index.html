@@ -5,111 +5,545 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>FORTUNA – Investor Access</title>
-  <link rel="stylesheet" href="/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="login-body">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <div class="login-bg">
-    <div class="login-bg-grid"></div>
-  </div>
-
-  <div class="login-container">
-    <div class="login-card">
-      <!-- Logo -->
-      <div class="login-logo">
-        <img src="/assets/logo.png" alt="FORTUNA" onerror="this.style.display='none'; document.querySelector('.login-logo-text').style.display='block'">
-        <div class="login-logo-text" style="display:none">FORTUNA</div>
-      </div>
-
-      <div class="login-header">
-        <h1>FORTUNA</h1>
-        <p class="login-subtitle">PORTAIL PRIVÉ D'INVESTISSEURS</p>
-        <div class="login-badge">Accès restreint · Confidentiel</div>
-      </div>
-
-      <form id="loginForm" class="login-form" autocomplete="off">
-        <div class="form-group">
-          <label for="email">Email (optionnel)</label>
-          <input type="email" id="email" name="email" placeholder="votre@email.com" autocomplete="username">
-        </div>
-        <div class="form-group">
-          <label for="password">Mot de passe <span class="required">*</span></label>
-          <div class="input-wrapper">
-            <input type="password" id="password" name="password" placeholder="••••••••••••" required autocomplete="current-password">
-            <button type="button" class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div id="loginError" class="login-error" style="display:none"></div>
-
-        <button type="submit" class="btn-primary btn-full" id="loginBtn">
-          <span id="btnText">Accéder aux infos et documents</span>
-          <span id="btnLoader" class="btn-loader" style="display:none">
-            <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          </span>
-        </button>
-      </form>
-
-      <div class="login-footer">
-        <p>Document confidentiel réservé aux investisseurs autorisés.</p>
-        <p>© 2026 FORTUNA · <a href="mailto:laurent@fortuna.re">Contact</a></p>
-      </div>
-    </div>
-
-    <div class="login-tagline">
-      <p>"Fortuna organise. Fortuna structure. Fortuna réalise."</p>
-      <span>La plateforme numérique du BTP réunionnais</span>
-    </div>
-  </div>
-
-  <script>
-    function togglePw() {
-      const i = document.getElementById('password');
-      i.type = i.type === 'password' ? 'text' : 'password';
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1fe8 0%, #2563eb 40%, #1d4ed8 70%, #1e3a8a 100%);
+      display: flex;
+      align-items: stretch;
     }
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const errEl = document.getElementById('loginError');
-      const btnText = document.getElementById('btnText');
-      const btnLoader = document.getElementById('btnLoader');
-      const btn = document.getElementById('loginBtn');
+    /* ── LAYOUT ── */
+    .lp-wrap {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
 
-      errEl.style.display = 'none';
-      btnText.style.display = 'none';
-      btnLoader.style.display = 'flex';
-      btn.disabled = true;
+    /* ── LEFT ── */
+    .lp-left {
+      flex: 1 1 60%;
+      padding: 48px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #fff;
+    }
 
-      try {
-        sessionStorage.removeItem('fortuna_token');
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (data.success) {
-          if (data.token) sessionStorage.setItem('fortuna_token', data.token);
-          window.location.href = '/dashboard';
-        } else {
-          errEl.textContent = data.error || 'Identifiants incorrects.';
-          errEl.style.display = 'block';
-        }
-      } catch {
-        errEl.textContent = 'Erreur de connexion. Réessayez.';
+    .lp-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: #fff;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+
+    .lp-headline {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 20px;
+      max-width: 560px;
+    }
+
+    .lp-sub {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,.8);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .lp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+
+    .lp-tag {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 6px;
+      padding: 5px 13px;
+      font-size: .78rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.9);
+    }
+
+    .lp-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 16px;
+    }
+
+    .lp-stat-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .lp-stat-lbl {
+      font-size: .75rem;
+      color: rgba(255,255,255,.65);
+      margin-top: 3px;
+    }
+
+    /* KPI cards */
+    .lp-kpis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 36px;
+    }
+
+    .lp-kpi {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .lp-kpi-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .lp-kpi-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .lp-kpi-sub {
+      font-size: .7rem;
+      color: rgba(255,255,255,.6);
+      margin-top: 4px;
+    }
+
+    .lp-kpi-sub.orange { color: #fbbf24; }
+
+    /* ── RIGHT ── */
+    .lp-right {
+      flex: 0 0 420px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 36px 36px 32px;
+      overflow-y: auto;
+    }
+
+    /* steps card */
+    .rcard {
+      background: #f8faff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px 20px 16px;
+      margin-bottom: 20px;
+    }
+
+    .rcard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .rcard-brand {
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      color: #1d4ed8;
+    }
+
+    .rcard-label {
+      font-size: .65rem;
+      font-weight: 600;
+      color: #64748b;
+      background: #e2e8f0;
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    .step-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .step-num {
+      width: 24px; height: 24px;
+      background: #1d4ed8;
+      color: #fff;
+      border-radius: 50%;
+      font-size: .7rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-title {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .step-desc {
+      font-size: .72rem;
+      color: #64748b;
+      line-height: 1.45;
+      margin-top: 1px;
+    }
+
+    /* 2x2 grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .info-box-title {
+      font-size: .72rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 3px;
+    }
+
+    .info-box-text {
+      font-size: .68rem;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    /* LOGIN FORM */
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0 18px;
+    }
+
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    .login-divider span {
+      font-size: .72rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .login-title {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 14px;
+    }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-family: inherit;
+      color: #1e293b;
+      background: #fff;
+      transition: border-color .2s;
+      outline: none;
+    }
+
+    .form-group input:focus { border-color: #2563eb; }
+
+    .input-wrapper { position: relative; }
+    .input-wrapper input { padding-right: 40px; }
+
+    .toggle-pw {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #94a3b8;
+      padding: 4px; display: flex;
+    }
+
+    .login-error {
+      background: #fef2f2; color: #dc2626;
+      border: 1px solid #fecaca; border-radius: 6px;
+      padding: 8px 12px; font-size: .78rem;
+      margin-bottom: 10px;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: .88rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity .2s;
+      margin-top: 4px;
+    }
+
+    .btn-login:hover { opacity: .9; }
+    .btn-login:disabled { opacity: .65; cursor: not-allowed; }
+
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .login-footer-note {
+      text-align: center;
+      font-size: .68rem;
+      color: #94a3b8;
+      margin-top: 14px;
+    }
+
+    .login-footer-note a { color: #2563eb; text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .lp-wrap { flex-direction: column; }
+      .lp-left { padding: 40px 24px 32px; }
+      .lp-headline { font-size: 2rem; }
+      .lp-right { flex: none; width: 100%; }
+      .lp-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lp-wrap">
+
+  <!-- ════ LEFT ════ -->
+  <div class="lp-left">
+    <div class="lp-badge">Tour 1 — Love Money &nbsp;·&nbsp; 150 000 € &nbsp;·&nbsp; Clôture 5 avril 2026</div>
+
+    <h1 class="lp-headline">FORTUNA structure le marché de la construction.</h1>
+
+    <p class="lp-sub">La plateforme transforme une demande de travaux ou de construction en projet structuré, connecté à des professionnels qualifiés et suivi dans un environnement unique.</p>
+
+    <div class="lp-tags">
+      <span class="lp-tag">Particuliers</span>
+      <span class="lp-tag">Professionnels du BTP</span>
+      <span class="lp-tag">Urbanisme</span>
+      <span class="lp-tag">Suivi de projet</span>
+      <span class="lp-tag">Traçabilité</span>
+    </div>
+
+    <div class="lp-kpis">
+      <div class="lp-kpi">
+        <div class="lp-kpi-label">Marché adressable</div>
+        <div class="lp-kpi-value">8 Mds €</div>
+        <div class="lp-kpi-sub">BTP La Réunion</div>
+      </div>
+      <div class="lp-kpi">
+        <div class="lp-kpi-label">CA projeté an 1</div>
+        <div class="lp-kpi-value">8,5 M€</div>
+        <div class="lp-kpi-sub orange">Hypothèse prudente</div>
+      </div>
+      <div class="lp-kpi">
+        <div class="lp-kpi-label">Levée Love Money</div>
+        <div class="lp-kpi-value">150 K€</div>
+        <div class="lp-kpi-sub">Sprint Mars 2026</div>
+      </div>
+      <div class="lp-kpi">
+        <div class="lp-kpi-label">Autonomie financière</div>
+        <div class="lp-kpi-value">&lt; 24 mois</div>
+        <div class="lp-kpi-sub">Rentabilité opérationnelle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ RIGHT ════ -->
+  <div class="lp-right">
+
+    <!-- Steps card -->
+    <div class="rcard">
+      <div class="rcard-header">
+        <span class="rcard-brand">FORTUNA</span>
+        <span class="rcard-label">Portail investisseurs</span>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Le particulier dépose son projet</div>
+            <div class="step-desc">Terrain, construction, rénovation, besoins, budget et contraintes structurés dès l'entrée.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">FORTUNA organise la demande</div>
+            <div class="step-desc">La plateforme qualifie le projet et le rend exploitable pour les bons intervenants.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Les professionnels reçoivent des projets qualifiés</div>
+            <div class="step-desc">Les artisans et entreprises accèdent à des demandes plus claires et pertinentes.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Le projet est suivi dans un seul outil</div>
+            <div class="step-desc">Devis, étapes, documents et pilotage du parcours sont centralisés.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-box-title">Problème</div>
+          <div class="info-box-text">Un marché encore fragmenté, complexe et peu digitalisé.</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-title">Modèle</div>
+          <div class="info-box-text">Revenus récurrents par abonnement des professionnels.</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-title">Vision</div>
+          <div class="info-box-text">Devenir le guichet unique du parcours travaux et construction.</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-title">Objectif</div>
+          <div class="info-box-text">Prouver l'adoption terrain et structurer le marché à partir de La Réunion.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="login-divider"><span>ACCÈS INVESTISSEURS</span></div>
+
+    <!-- Login form -->
+    <div class="login-title">Connectez-vous pour accéder au dossier complet</div>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="email">Email (optionnel)</label>
+        <input type="email" id="email" name="email" placeholder="votre@email.com" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe <span style="color:#dc2626">*</span></label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" placeholder="••••••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="loginError" class="login-error" style="display:none"></div>
+
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span id="btnText">Accéder aux documents</span>
+        <span id="btnLoader" style="display:none">
+          <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </span>
+      </button>
+    </form>
+
+    <div class="login-footer-note">
+      Document confidentiel · Accès restreint aux investisseurs autorisés<br>
+      © 2026 FORTUNA · <a href="mailto:laurent@fortuna.re">Contact</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function togglePw() {
+    const i = document.getElementById('password');
+    i.type = i.type === 'password' ? 'text' : 'password';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errEl = document.getElementById('loginError');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const btn = document.getElementById('loginBtn');
+
+    errEl.style.display = 'none';
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'flex';
+    btn.disabled = true;
+
+    try {
+      sessionStorage.removeItem('fortuna_token');
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.token) sessionStorage.setItem('fortuna_token', data.token);
+        window.location.href = '/dashboard';
+      } else {
+        errEl.textContent = data.error || 'Identifiants incorrects.';
         errEl.style.display = 'block';
-      } finally {
-        btnText.style.display = 'inline';
-        btnLoader.style.display = 'none';
-        btn.disabled = false;
       }
-    });
-  </script>
+    } catch {
+      errEl.textContent = 'Erreur de connexion. Réessayez.';
+      errEl.style.display = 'block';
+    } finally {
+      btnText.style.display = 'inline';
+      btnLoader.style.display = 'none';
+      btn.disabled = false;
+    }
+  });
+</script>
+
 </body>
 </html>
