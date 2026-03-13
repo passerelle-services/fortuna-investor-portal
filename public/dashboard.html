@@ -953,6 +953,29 @@
 
 </main>
 
+<!-- ════ MODAL CODE TRACKING ════ -->
+<div id="trackingModal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(15,23,42,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeTrackingModal()">
+  <div style="background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.25);text-align:center;">
+    <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+    <h3 style="font-size:1.1rem;font-weight:700;color:#1e293b;margin-bottom:6px;">Accès Tracking</h3>
+    <p style="font-size:.82rem;color:#64748b;margin-bottom:24px;">Entrez le code fondateurs pour accéder aux données d'activité du portail.</p>
+    <input type="password" id="trackingCodeInput"
+      placeholder="Code d'accès"
+      style="width:100%;padding:10px 14px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:.9rem;font-family:inherit;outline:none;text-align:center;letter-spacing:.15em;margin-bottom:8px;"
+      onkeydown="if(event.key==='Enter')submitTrackingCode()"
+    >
+    <div id="trackingCodeError" style="display:none;color:#dc2626;font-size:.76rem;margin-bottom:8px;"></div>
+    <button onclick="submitTrackingCode()"
+      style="width:100%;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:8px;padding:11px;font-size:.88rem;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;">
+      Valider
+    </button>
+    <button onclick="closeTrackingModal()"
+      style="background:none;border:none;color:#94a3b8;font-size:.78rem;cursor:pointer;font-family:inherit;">
+      Annuler
+    </button>
+  </div>
+</div>
+
 <script src="/js/dashboard.js"></script>
 </body>
 </html>

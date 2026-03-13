@@ -52,7 +52,14 @@ function showSection(id, linkEl) {
   if (tb) tb.textContent = SECTION_TITLES[id] || id;
 
   if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
-  if (id === 'analytics') loadAnalytics();
+  if (id === 'analytics') {
+    // Reroute vers la vérification du code AVANT d'afficher
+    // On annule l'affichage de la section et on ouvre le modal
+    document.getElementById('sec-analytics').classList.remove('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    openTrackingModal();
+    return false;
+  }
   if (id === 'pitch-deck') loadPitchDeck();
 
   return false;
@@ -228,35 +235,75 @@ async function loadAnalytics() {
     const data = await res.json();
 
     const docLabels = {
-      'business-plan':     'Business Plan',
-      'pitch-deck':        'Pitch Deck',
-      'executive-summary': 'Executive Summary',
-      'qr-investisseurs':  'Q/R Investisseurs',
+      'business-plan':     '📄 Business Plan',
+      'pitch-deck':        '🎯 Pitch Deck',
+      'executive-summary': '📋 Executive Summary',
+      'qr-investisseurs':  '💬 Q/R Investisseurs',
     };
 
-    const isNetlify = !!data.deployedOn;
-    const noteHtml = isNetlify
-      ? `<div class="info-box" style="margin-bottom:1.5rem">
-           ℹ️ ${data.note || 'Analytics persistantes non disponibles en mode serverless.'}
-         </div>`
-      : '';
+    const sectionLabels = {
+      'business-plan': 'Business Plan', 'love-money': 'Tour 1 Love Money',
+      'qr': 'Q/R', 'pitch-deck': 'Pitch Deck', 'docs': 'Documents légaux',
+      'contact': 'Contact', 'analytics': 'Tracking'
+    };
 
+    // ── Par utilisateur ──────────────────────────────────────────────
+    const userMap = {};
+    (data.recentLogins || []).forEach(l => {
+      if (!userMap[l.user]) userMap[l.user] = { logins: [], lastLogin: null };
+      userMap[l.user].logins.push(l.at);
+      if (!userMap[l.user].lastLogin || new Date(l.at) > new Date(userMap[l.user].lastLogin))
+        userMap[l.user].lastLogin = l.at;
+    });
+
+    const fmt = iso => {
+      if (!iso) return '–';
+      const d = new Date(iso);
+      return d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    };
+
+    const userRows = Object.keys(userMap).length
+      ? Object.entries(userMap).sort((a,b) => new Date(b[1].lastLogin) - new Date(a[1].lastLogin)).map(([user, info]) => `
+          <tr>
+            <td style="padding:10px 12px;font-weight:600;color:#1e293b">${user}</td>
+            <td style="padding:10px 12px;text-align:center">
+              <span style="background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:3px 10px;font-size:.8rem;font-weight:700">${info.logins.length}</span>
+            </td>
+            <td style="padding:10px 12px;color:#64748b;font-size:.82rem">${fmt(info.lastLogin)}</td>
+          </tr>`).join('')
+      : `<tr><td colspan="3" style="padding:16px;text-align:center;color:#94a3b8">Aucune connexion enregistrée</td></tr>`;
+
+    // ── Documents ────────────────────────────────────────────────────
     const topDocs = Object.entries(data.docCounts || {}).length
-      ? Object.entries(data.docCounts).sort((a,b) => b[1]-a[1])
-          .map(([k,v]) => `<li class="log-item"><span class="log-user">${docLabels[k]||k}</span><span class="log-time">${v} vue(s)</span></li>`).join('')
-      : '<li class="log-item"><span class="log-user">Aucune donnée</span></li>';
+      ? Object.entries(data.docCounts).sort((a,b) => b[1]-a[1]).map(([k,v]) => `
+          <tr>
+            <td style="padding:10px 12px;color:#1e293b">${docLabels[k]||k}</td>
+            <td style="padding:10px 12px;text-align:center">
+              <span style="background:#f0fdf4;color:#16a34a;border-radius:20px;padding:3px 10px;font-size:.8rem;font-weight:700">${v}</span>
+            </td>
+          </tr>`).join('')
+      : `<tr><td colspan="2" style="padding:16px;text-align:center;color:#94a3b8">Aucune consultation enregistrée</td></tr>`;
 
-    const recentLogins = (data.recentLogins || []).length
-      ? data.recentLogins.map(l => {
-          const d = new Date(l.at);
-          const time = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
-          return `<li class="log-item"><span class="log-user">${l.user}</span><span class="log-time">${time}</span></li>`;
-        }).join('')
-      : '<li class="log-item"><span class="log-user">Aucune donnée</span></li>';
+    // ── Dernières activités ──────────────────────────────────────────
+    const recentActivity = (data.recentLogins || []).slice(0, 15).map(l => {
+      const d = new Date(l.at);
+      const time = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      return `<li class="log-item"><span class="log-user">${l.user}</span><span class="log-time">${time}</span></li>`;
+    }).join('') || '<li class="log-item"><span class="log-user">Aucune donnée</span></li>';
+
+    const uniqueUsers = Object.keys(userMap).length;
+    const lastActivity = data.recentLogins?.[0] ? fmt(data.recentLogins[0].at) : '–';
+
+    const tblStyle = 'width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0';
+    const thStyle = 'padding:10px 12px;background:#f8fafc;font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;text-align:left;border-bottom:1px solid #e2e8f0';
+    const trHover = 'border-bottom:1px solid #f1f5f9';
 
     container.innerHTML = `
-      ${noteHtml}
-      <div class="analytics-grid">
+      <div class="analytics-grid" style="margin-bottom:1.5rem">
+        <div class="analytics-card">
+          <div class="analytics-num">${uniqueUsers || '–'}</div>
+          <div class="analytics-label">Investisseurs actifs</div>
+        </div>
         <div class="analytics-card">
           <div class="analytics-num">${data.totalLogins || '–'}</div>
           <div class="analytics-label">Connexions totales</div>
@@ -265,17 +312,76 @@ async function loadAnalytics() {
           <div class="analytics-num">${data.totalDocViews || '–'}</div>
           <div class="analytics-label">Documents consultés</div>
         </div>
-        <div class="analytics-card">
-          <div class="analytics-num">${Object.keys(data.docCounts||{}).length || '–'}</div>
-          <div class="analytics-label">Docs uniques vus</div>
-        </div>
       </div>
-      <div class="content-grid" style="margin-top:1.5rem">
-        <div class="info-block"><h3>Documents les plus consultés</h3><ul class="log-list">${topDocs}</ul></div>
-        <div class="info-block"><h3>Dernières connexions</h3><ul class="log-list">${recentLogins}</ul></div>
+
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <h3 style="font-size:.95rem;font-weight:700;color:#1e293b">👤 Activité par investisseur</h3>
+          <span style="font-size:.75rem;color:#94a3b8">Dernière activité : ${lastActivity}</span>
+        </div>
+        <table style="${tblStyle}">
+          <thead><tr>
+            <th style="${thStyle}">Investisseur</th>
+            <th style="${thStyle};text-align:center">Visites</th>
+            <th style="${thStyle}">Dernière connexion</th>
+          </tr></thead>
+          <tbody style="${trHover}">${userRows}</tbody>
+        </table>
+      </div>
+
+      <div>
+        <h3 style="font-size:.95rem;font-weight:700;color:#1e293b;margin-bottom:.75rem">📂 Documents consultés</h3>
+        <table style="${tblStyle}">
+          <thead><tr>
+            <th style="${thStyle}">Document</th>
+            <th style="${thStyle};text-align:center">Vues</th>
+          </tr></thead>
+          <tbody>${topDocs}</tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <h3 style="font-size:.95rem;font-weight:700;color:#1e293b;margin-bottom:.75rem">🕐 Journal des connexions récentes</h3>
+        <ul class="log-list">${recentActivity}</ul>
       </div>`;
+
   } catch {
     container.innerHTML = '<div class="loading-spinner">Erreur de chargement.</div>';
+  }
+}
+
+// ─── TRACKING CODE MODAL ───────────────────────────────────────────────────────
+function openTrackingModal() {
+  const modal = document.getElementById('trackingModal');
+  modal.style.display = 'flex';
+  document.getElementById('trackingCodeInput').value = '';
+  document.getElementById('trackingCodeError').style.display = 'none';
+  setTimeout(() => document.getElementById('trackingCodeInput').focus(), 100);
+}
+
+function closeTrackingModal() {
+  document.getElementById('trackingModal').style.display = 'none';
+}
+
+function submitTrackingCode() {
+  const code = document.getElementById('trackingCodeInput').value.trim();
+  const errEl = document.getElementById('trackingCodeError');
+  if (code === 'anutrof') {
+    closeTrackingModal();
+    // Afficher la section analytics manuellement
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-analytics').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const nav = document.querySelector('[data-section="analytics"]');
+    if (nav) nav.classList.add('active');
+    const tb = document.getElementById('topbarTitle');
+    if (tb) tb.textContent = 'Tracking Investisseurs';
+    loadAnalytics();
+  } else {
+    errEl.textContent = 'Code incorrect. Accès refusé.';
+    errEl.style.display = 'block';
+    document.getElementById('trackingCodeInput').value = '';
+    document.getElementById('trackingCodeInput').focus();
   }
 }
 
