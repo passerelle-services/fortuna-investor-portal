@@ -342,22 +342,44 @@ async function submitInvestForm(e) {
   const tel    = document.getElementById('iTel').value.trim();
   const msg    = document.getElementById('iMsg').value.trim();
 
-  // Envoi Netlify Forms
+  const payload = {
+    lot:       selectedLot.lot,
+    montant:   selectedLot.montant,
+    profil:    selectedLot.profil,
+    prenom, nom, email,
+    telephone: tel,
+    message:   msg,
+  };
+
+  // 1 – Envoi email via Netlify Function (SMTP)
+  let emailSent = false;
+  try {
+    const res = await fetch('/api/send-reservation', {
+      method:  'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    if (res.ok) emailSent = true;
+  } catch { /* réseau indisponible */ }
+
+  // 2 – Fallback : Netlify Forms (capture sans SMTP)
   try {
     await fetch('/', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         'form-name': 'reservation-investissement',
         prenom, nom, email, telephone: tel,
-        lot: 'LOT ' + selectedLot.lot,
+        lot:     'LOT ' + selectedLot.lot,
         montant: selectedLot.montant,
-        profil: selectedLot.profil,
+        profil:  selectedLot.profil,
         message: msg,
       }).toString(),
     });
-  } catch {
-    // Fallback mailto si hors Netlify
+  } catch { /* ignore si hors Netlify */ }
+
+  // 3 – Fallback ultime : mailto si SMTP et Netlify Forms échouent
+  if (!emailSent) {
     const subj = encodeURIComponent(`[FORTUNA] Réservation LOT ${selectedLot.lot} – ${prenom} ${nom}`);
     const body = encodeURIComponent(
       `Réservation investissement FORTUNA\n\n` +
@@ -367,6 +389,7 @@ async function submitInvestForm(e) {
     window.open(`mailto:laurent@fortuna.re,thierry@fortuna.re?subject=${subj}&body=${body}`, '_blank');
   }
 
+  // Afficher l'écran de succès
   document.getElementById('successDetails').innerHTML =
     `LOT ${selectedLot.lot} — ${selectedLot.montant} (${selectedLot.profil})<br>` +
     `👤 ${prenom} ${nom} · 📧 ${email} · 📞 ${tel}`;
