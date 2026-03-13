@@ -304,18 +304,23 @@ async function loadAnalytics() {
     const thStyle = 'padding:10px 12px;background:#f8fafc;font-size:.72rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;text-align:left;border-bottom:1px solid #e2e8f0';
     const trHover = 'border-bottom:1px solid #f1f5f9';
 
+    const errBanner = data.blobsError
+      ? `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:.78rem;color:#dc2626">⚠️ Erreur stockage : ${data.blobsError}</div>`
+      : '';
+
     container.innerHTML = `
+      ${errBanner}
       <div class="analytics-grid" style="margin-bottom:1.5rem">
         <div class="analytics-card">
-          <div class="analytics-num">${uniqueUsers || '–'}</div>
+          <div class="analytics-num">${uniqueUsers != null ? uniqueUsers : '–'}</div>
           <div class="analytics-label">Investisseurs actifs</div>
         </div>
         <div class="analytics-card">
-          <div class="analytics-num">${data.totalLogins || '–'}</div>
+          <div class="analytics-num">${data.totalLogins != null ? data.totalLogins : '–'}</div>
           <div class="analytics-label">Connexions totales</div>
         </div>
         <div class="analytics-card">
-          <div class="analytics-num">${data.totalDocViews || '–'}</div>
+          <div class="analytics-num">${data.totalDocViews != null ? data.totalDocViews : '–'}</div>
           <div class="analytics-label">Documents consultés</div>
         </div>
       </div>

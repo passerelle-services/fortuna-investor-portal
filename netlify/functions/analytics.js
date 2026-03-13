@@ -79,12 +79,13 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: corsHeaders(),
       body: JSON.stringify({
-        totalLogins: '–',
-        totalDocViews: '–',
+        totalLogins: null,
+        totalDocViews: null,
         docCounts: {},
         recentLogins: [],
         userMap: {},
-        error: 'Blobs indisponibles : ' + err.message,
+        blobsError: err.message,
+        blobsStack: err.stack ? err.stack.split('\n')[0] : '',
       }),
     };
   }
