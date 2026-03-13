@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const { getStore } = require('@netlify/blobs');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fortuna-investor-jwt-secret-2026';
 
@@ -31,17 +32,29 @@ function verifyToken(event) {
   catch { return null; }
 }
 
+async function saveDocEvent(docId, userName) {
+  try {
+    const store = getStore('fortuna-analytics');
+    const key = `doc-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+    await store.set(key, JSON.stringify({
+      type: 'doc',
+      docId,
+      user: userName,
+      at: new Date().toISOString(),
+    }));
+  } catch (e) {
+    console.error('[analytics] saveDocEvent error:', e.message);
+  }
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders(), body: '' };
 
-  // Vérification JWT
   const decoded = verifyToken(event);
   if (!decoded) {
     return { statusCode: 401, headers: corsHeaders(), body: JSON.stringify({ error: 'Non autorisé' }) };
   }
 
-  // Extraction de l'ID du document depuis le path
-  // event.path = "/.netlify/functions/doc/business-plan" ou "/api/doc/business-plan"
   const segments = (event.path || '').split('/').filter(Boolean);
   const docId = segments[segments.length - 1];
 
@@ -49,7 +62,6 @@ exports.handler = async (event) => {
     return { statusCode: 404, headers: corsHeaders(), body: JSON.stringify({ error: 'Document introuvable.' }) };
   }
 
-  // Lecture du fichier PDF depuis le dossier docs/ (bundlé avec la fonction)
   const docPath = path.join(__dirname, 'docs', docId + '.pdf');
 
   if (!fs.existsSync(docPath)) {
@@ -59,6 +71,8 @@ exports.handler = async (event) => {
 
   try {
     const content = fs.readFileSync(docPath);
+    // Enregistrement de la consultation
+    await saveDocEvent(docId, decoded.name || decoded.user || 'Investisseur');
     return {
       statusCode: 200,
       headers: {

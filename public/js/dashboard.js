@@ -247,14 +247,20 @@ async function loadAnalytics() {
       'contact': 'Contact', 'analytics': 'Tracking'
     };
 
-    // ── Par utilisateur ──────────────────────────────────────────────
-    const userMap = {};
-    (data.recentLogins || []).forEach(l => {
-      if (!userMap[l.user]) userMap[l.user] = { logins: [], lastLogin: null };
-      userMap[l.user].logins.push(l.at);
-      if (!userMap[l.user].lastLogin || new Date(l.at) > new Date(userMap[l.user].lastLogin))
-        userMap[l.user].lastLogin = l.at;
-    });
+    // ── Par utilisateur (depuis userMap API ou reconstitué) ──────────
+    const userMap = data.userMap && Object.keys(data.userMap).length
+      ? data.userMap
+      : (() => {
+          const m = {};
+          (data.recentLogins || []).forEach(l => {
+            const key = l.user || l.email || 'Inconnu';
+            if (!m[key]) m[key] = { logins: [], lastLogin: null };
+            m[key].logins.push(l.at);
+            if (!m[key].lastLogin || new Date(l.at) > new Date(m[key].lastLogin))
+              m[key].lastLogin = l.at;
+          });
+          return m;
+        })();
 
     const fmt = iso => {
       if (!iso) return '–';
