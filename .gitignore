@@ -4,3 +4,4 @@ data/analytics.json
 *.env
 .DS_Store
 Thumbs.db
+add-investor.js
