@@ -1,6 +1,6 @@
 // ─── FORTUNA · Netlify Function : /api/me ─────────────────────────────────────
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'fortuna-investor-jwt-secret-2026';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function corsHeaders() {
   return {

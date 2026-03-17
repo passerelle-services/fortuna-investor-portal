@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const { getStore } = require('@netlify/blobs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fortuna-investor-jwt-secret-2026';
+const JWT_SECRET = process.env.JWT_SECRET;
 const SITE_ID = process.env.SITE_ID || process.env.NETLIFY_SITE_ID || '1c1bfd7c-e6ef-4349-a4b1-12da522087fa';
 
 function corsHeaders() {

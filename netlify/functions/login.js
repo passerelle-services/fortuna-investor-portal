@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getStore } = require('@netlify/blobs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fortuna-investor-jwt-secret-2026';
+const JWT_SECRET = process.env.JWT_SECRET;
 const SHARED_PASSWORD = process.env.SHARED_PASSWORD || '';
 
 const INVESTORS = [
