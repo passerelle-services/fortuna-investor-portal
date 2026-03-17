@@ -4,16 +4,16 @@ const jwt = require('jsonwebtoken');
 const { getStore } = require('@netlify/blobs');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fortuna-investor-jwt-secret-2026';
-const SHARED_PASSWORD = process.env.SHARED_PASSWORD || 'Fortuna2026!';
+const SHARED_PASSWORD = process.env.SHARED_PASSWORD || '';
 
 const INVESTORS = [
-  { email: 'investor@fortuna.re',  passwordHash: bcrypt.hashSync(process.env.SHARED_PASSWORD || 'Fortuna2026!', 10), name: 'Investisseur' },
-  { email: 'laurent@fortuna.re',   passwordHash: bcrypt.hashSync(process.env.PASS_LAURENT || 'Laurent2026!', 10),  name: 'Laurent Aubry' },
-  { email: 'thierry@fortuna.re',   passwordHash: bcrypt.hashSync(process.env.PASS_THIERRY || 'Thierry2026!', 10),  name: 'Thierry Fontaine' },
-  { email: 'laur.aubry974@gmail.com', passwordHash: bcrypt.hashSync(process.env.PASS_LAURENT_AUBRY || 'Aubry-974', 10), name: 'Laurent Aubry' },
+  { email: 'investor@fortuna.re',           passwordHash: '$2a$10$8AxwQCh5MbpilyRcAFwmd.OxVcFiW6Ug9AFjKGUT3iPVD7boSkZRe', name: 'Investisseur' },
+  { email: 'laurent@fortuna.re',            passwordHash: '$2a$10$8CGotTx.57kgclZLNRpAP.pSEMOG8izcDcL6El6H9rk9DQoMNjXHC', name: 'Laurent Aubry' },
+  { email: 'thierry@fortuna.re',            passwordHash: '$2a$10$Q7DEcOxZHRbkeD25HgUcoOKic9D6FKZr9uyx/wdUzpqfEr0iQUzm6', name: 'Thierry Fontaine' },
+  { email: 'laur.aubry974@gmail.com',       passwordHash: '$2a$10$nwFh5SVVf.ru2l4GIeDFXueICH6k9uEUlP8V.ZlZNolZgXlAFrLfu', name: 'Laurent Aubry' },
   // ── Nouveaux investisseurs ────────────────────────────────────────────────
-  { email: 'patrick.deleurme@gmail.com', passwordHash: bcrypt.hashSync('invest0126', 10), name: 'Patrick Deleurme' },
-  { email: 'passerelle.services@gmail.com', passwordHash: bcrypt.hashSync('Passerelle-974', 10), name: 'Passerelle Services' },
+  { email: 'patrick.deleurme@gmail.com',    passwordHash: '$2a$10$8moXlduyPEPqitUktqsIxOMp7UW9Pk906PJQgyyNX/QnJ0a9KlApq', name: 'Patrick Deleurme' },
+  { email: 'passerelle.services@gmail.com', passwordHash: '$2a$10$eHgbTZPPd83s.qZ8J73bGOx6IT0jbr9K0D.4kiEcjQFBzsXv5qZPq', name: 'Passerelle Services' },
 ];
 
 function corsHeaders() {
