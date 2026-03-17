@@ -13,6 +13,7 @@ const INVESTORS = [
   { email: 'laur.aubry974@gmail.com', passwordHash: bcrypt.hashSync(process.env.PASS_LAURENT_AUBRY || 'Aubry-974', 10), name: 'Laurent Aubry' },
   // ── Nouveaux investisseurs ────────────────────────────────────────────────
   { email: 'patrick.deleurme@gmail.com', passwordHash: bcrypt.hashSync('invest0126', 10), name: 'Patrick Deleurme' },
+  { email: 'passerelle.services@gmail.com', passwordHash: bcrypt.hashSync('Passerelle-974', 10), name: 'Passerelle Services' },
 ];
 
 function corsHeaders() {
