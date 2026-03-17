@@ -11,6 +11,7 @@ const INVESTORS = [
   { email: 'laurent@fortuna.re',   passwordHash: bcrypt.hashSync(process.env.PASS_LAURENT || 'Laurent2026!', 10),  name: 'Laurent Aubry' },
   { email: 'thierry@fortuna.re',   passwordHash: bcrypt.hashSync(process.env.PASS_THIERRY || 'Thierry2026!', 10),  name: 'Thierry Fontaine' },
   { email: 'laur.aubry974@gmail.com', passwordHash: bcrypt.hashSync(process.env.PASS_LAURENT_AUBRY || 'Aubry-974', 10), name: 'Laurent Aubry' },
+  // ── Nouveaux investisseurs ────────────────────────────────────────────────
 ];
 
 function corsHeaders() {
