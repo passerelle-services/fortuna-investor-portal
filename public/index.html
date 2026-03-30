@@ -334,6 +334,25 @@
     .btn-login:hover { opacity: .9; }
     .btn-login:disabled { opacity: .65; cursor: not-allowed; }
 
+    .btn-nda {
+      display: block;
+      width: 100%;
+      background: #fff;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: .85rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: background .2s, color .2s;
+    }
+    .btn-nda:hover { background: #2563eb; color: #fff; }
+
     .spin { animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -491,6 +510,10 @@
           <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
         </span>
       </button>
+
+      <a href="https://ndafortuna.netlify.app/" target="_blank" class="btn-nda">
+        ✍️ Signer l'accord de confidentialité
+      </a>
     </form>
 
     <div class="login-footer-note">
