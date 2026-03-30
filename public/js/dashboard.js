@@ -505,7 +505,7 @@ async function submitInvestForm(e) {
     const body = encodeURIComponent(
       `Réservation investissement FORTUNA\n\n` +
       `LOT ${selectedLot.lot} – ${selectedLot.montant} (${selectedLot.profil})\n\n` +
-      `Prénom : ${prenom}\nNom : ${nom}\nEmail : ${email}\nTél : ${tel}\nMessage : ${msg || '–'}\n\nClosing : 5 avril 2026`
+      `Prénom : ${prenom}\nNom : ${nom}\nEmail : ${email}\nTél : ${tel}\nMessage : ${msg || '–'}\n\nClosing : 30 avril 2026`
     );
     window.open(`mailto:laurent@fortuna.re,thierry@fortuna.re?subject=${subj}&body=${body}`, '_blank');
   }
