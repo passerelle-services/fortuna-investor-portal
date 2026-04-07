@@ -57,16 +57,29 @@ exports.handler = async (event) => {
     const userMap = {};
     validLogins.forEach(l => {
       const key = l.user || l.email || 'Inconnu';
-      if (!userMap[key]) userMap[key] = { logins: [], lastLogin: null };
+      if (!userMap[key]) userMap[key] = { logins: [], lastLogin: null, docs: [] };
       userMap[key].logins.push(l.at);
       if (!userMap[key].lastLogin || new Date(l.at) > new Date(userMap[key].lastLogin))
         userMap[key].lastLogin = l.at;
     });
 
-    // Stats par doc
+    // Stats par doc + docs par utilisateur
     const docCounts = {};
+    const docUsers = {};
     validDocs.forEach(d => {
-      if (d.docId) docCounts[d.docId] = (docCounts[d.docId] || 0) + 1;
+      if (!d.docId) return;
+      docCounts[d.docId] = (docCounts[d.docId] || 0) + 1;
+      // par doc : liste des users
+      if (!docUsers[d.docId]) docUsers[d.docId] = [];
+      docUsers[d.docId].push({ user: d.user || 'Inconnu', at: d.at });
+      // par user : liste des docs
+      const key = d.user || 'Inconnu';
+      if (userMap[key]) {
+        userMap[key].docs.push({ docId: d.docId, at: d.at });
+      } else {
+        // user a consulté un doc sans s'être loggé (rare) — on l'ajoute quand même
+        userMap[key] = { logins: [], lastLogin: null, docs: [{ docId: d.docId, at: d.at }] };
+      }
     });
 
     return {
@@ -76,6 +89,7 @@ exports.handler = async (event) => {
         totalLogins: validLogins.length,
         totalDocViews: validDocs.length,
         docCounts,
+        docUsers,
         recentLogins: validLogins.slice(0, 30),
         userMap,
       }),

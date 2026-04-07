@@ -268,10 +268,15 @@ async function loadAnalytics() {
       return d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
     };
 
+    // Stocker les données pour les modals de détail
+    window._analyticsData = data;
+    window._docLabels = docLabels;
+    window._fmtDate = fmt;
+
     const userRows = Object.keys(userMap).length
       ? Object.entries(userMap).sort((a,b) => new Date(b[1].lastLogin) - new Date(a[1].lastLogin)).map(([user, info]) => `
-          <tr>
-            <td style="padding:10px 12px;font-weight:600;color:#1e293b">${user}</td>
+          <tr onclick="showUserDetail('${user.replace(/'/g,"\\'")}', window._analyticsData)" style="cursor:pointer;transition:background .15s" onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+            <td style="padding:10px 12px;font-weight:600;color:#1e293b">${user} <span style="font-size:.7rem;color:#94a3b8;margin-left:4px">▶</span></td>
             <td style="padding:10px 12px;text-align:center">
               <span style="background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:3px 10px;font-size:.8rem;font-weight:700">${info.logins.length}</span>
             </td>
@@ -282,8 +287,8 @@ async function loadAnalytics() {
     // ── Documents ────────────────────────────────────────────────────
     const topDocs = Object.entries(data.docCounts || {}).length
       ? Object.entries(data.docCounts).sort((a,b) => b[1]-a[1]).map(([k,v]) => `
-          <tr>
-            <td style="padding:10px 12px;color:#1e293b">${docLabels[k]||k}</td>
+          <tr onclick="showDocDetail('${k}', window._analyticsData)" style="cursor:pointer;transition:background .15s" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''">
+            <td style="padding:10px 12px;color:#1e293b">${docLabels[k]||k} <span style="font-size:.7rem;color:#94a3b8;margin-left:4px">▶</span></td>
             <td style="padding:10px 12px;text-align:center">
               <span style="background:#f0fdf4;color:#16a34a;border-radius:20px;padding:3px 10px;font-size:.8rem;font-weight:700">${v}</span>
             </td>
@@ -359,6 +364,86 @@ async function loadAnalytics() {
   } catch {
     container.innerHTML = '<div class="loading-spinner">Erreur de chargement.</div>';
   }
+}
+
+// ─── DETAIL MODALS ─────────────────────────────────────────────────────────────
+function showDetailModal(title, bodyHtml) {
+  let modal = document.getElementById('detailModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'detailModal';
+    modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:3000;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:14px;padding:28px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+          <h3 id="detailModalTitle" style="font-size:1rem;font-weight:700;color:#1e293b;margin:0"></h3>
+          <button onclick="document.getElementById('detailModal').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#94a3b8;line-height:1">✕</button>
+        </div>
+        <div id="detailModalBody"></div>
+      </div>`;
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    document.body.appendChild(modal);
+  }
+  document.getElementById('detailModalTitle').textContent = title;
+  document.getElementById('detailModalBody').innerHTML = bodyHtml;
+  modal.style.display = 'flex';
+}
+
+function showUserDetail(user, data) {
+  const fmt = window._fmtDate;
+  const docLabels = window._docLabels || {};
+  const userInfo = (data.userMap || {})[user];
+  if (!userInfo) return;
+
+  const docs = (userInfo.docs || []).sort((a,b) => new Date(b.at) - new Date(a.at));
+
+  let body = `<div style="margin-bottom:14px;font-size:.82rem;color:#64748b">
+    <strong>${userInfo.logins.length}</strong> connexion(s) · Dernière : <strong>${fmt ? fmt(userInfo.lastLogin) : userInfo.lastLogin}</strong>
+  </div>`;
+
+  if (docs.length) {
+    body += `<h4 style="font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Documents consultés</h4>
+    <table style="width:100%;border-collapse:collapse">`;
+    docs.forEach(d => {
+      const label = docLabels[d.docId] || d.docId;
+      body += `<tr style="border-bottom:1px solid #f1f5f9">
+        <td style="padding:8px 6px;color:#1e293b;font-size:.85rem">${label}</td>
+        <td style="padding:8px 6px;color:#94a3b8;font-size:.78rem;text-align:right">${fmt ? fmt(d.at) : d.at}</td>
+      </tr>`;
+    });
+    body += `</table>`;
+  } else {
+    body += `<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:16px 0">Aucun document consulté</p>`;
+  }
+
+  showDetailModal(`👤 ${user}`, body);
+}
+
+function showDocDetail(docId, data) {
+  const fmt = window._fmtDate;
+  const docLabels = window._docLabels || {};
+  const label = docLabels[docId] || docId;
+  const users = ((data.docUsers || {})[docId] || []).sort((a,b) => new Date(b.at) - new Date(a.at));
+
+  let body = `<div style="margin-bottom:14px;font-size:.82rem;color:#64748b">
+    <strong>${users.length}</strong> consultation(s) au total
+  </div>`;
+
+  if (users.length) {
+    body += `<h4 style="font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Consulté par</h4>
+    <table style="width:100%;border-collapse:collapse">`;
+    users.forEach(u => {
+      body += `<tr style="border-bottom:1px solid #f1f5f9">
+        <td style="padding:8px 6px;color:#1e293b;font-size:.85rem;font-weight:600">${u.user}</td>
+        <td style="padding:8px 6px;color:#94a3b8;font-size:.78rem;text-align:right">${fmt ? fmt(u.at) : u.at}</td>
+      </tr>`;
+    });
+    body += `</table>`;
+  } else {
+    body += `<p style="color:#94a3b8;font-size:.85rem;text-align:center;padding:16px 0">Aucune donnée disponible</p>`;
+  }
+
+  showDetailModal(`${label}`, body);
 }
 
 // ─── TRACKING CODE MODAL ───────────────────────────────────────────────────────
