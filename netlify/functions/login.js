@@ -14,6 +14,7 @@ const INVESTORS = [
   // ── Nouveaux investisseurs ────────────────────────────────────────────────
   { email: 'patrick.deleurme@gmail.com',    passwordHash: '$2a$10$8moXlduyPEPqitUktqsIxOMp7UW9Pk906PJQgyyNX/QnJ0a9KlApq', name: 'Patrick Deleurme' },
   { email: 'passerelle.services@gmail.com', passwordHash: '$2a$10$eHgbTZPPd83s.qZ8J73bGOx6IT0jbr9K0D.4kiEcjQFBzsXv5qZPq', name: 'Passerelle Services' },
+  { email: 'marc.chouquet@ayomi.pro',       passwordHash: '$2a$10$/zXOdMckF.7oteXJ8ZS4G.DOt8ubxiCiDRn84O1Mllb5h1HYqf7Fu', name: 'Marc Chouquet' },
 ];
 
 function corsHeaders() {
